@@ -3,6 +3,7 @@ package com.sid.bankaccount.web;
 import com.sid.bankaccount.DTO.BankAccountRequestDTO;
 import com.sid.bankaccount.DTO.BankAccountResponse;
 import com.sid.bankaccount.service.interfaces.AccountService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,13 +39,13 @@ public class AccountRestController {
     }
 
     @PostMapping
-    public ResponseEntity<BankAccountResponse> create(@RequestBody BankAccountRequestDTO bankAccountRequestDTO) {
+    public ResponseEntity<BankAccountResponse> create(@Valid @RequestBody BankAccountRequestDTO bankAccountRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(bankAccountRequestDTO));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BankAccountResponse> update(@PathVariable String id,
-                                                      @RequestBody BankAccountRequestDTO bankAccountRequestDTO) {
+                                                      @Valid @RequestBody BankAccountRequestDTO bankAccountRequestDTO) {
         return accountService.updateAccount(id, bankAccountRequestDTO)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

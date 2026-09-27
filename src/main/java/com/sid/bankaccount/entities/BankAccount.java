@@ -1,11 +1,7 @@
 package com.sid.bankaccount.entities;
 
 import com.sid.bankaccount.enums.AccountType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +20,12 @@ public class BankAccount {
     @Id
     private String id;
     private double balance;
+    @Column(nullable = false)
     private String currency;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AccountType type;
+
+    @ManyToOne
+    private  Customer customer;
 }

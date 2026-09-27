@@ -1,6 +1,6 @@
 package com.sid.bankaccount.DTO;
 
-import com.sid.bankaccount.enums.AccountType;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,10 +12,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BankAccountResponse {
-    private String id;
-    private double balance;
-    private String currency;
-    private AccountType type;
-    private Long customerId;
+public class CustomerRequestDTO {
+    @NotBlank
+    private String name;
 }

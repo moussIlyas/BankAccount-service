@@ -1,21 +1,20 @@
 package com.sid.bankaccount.DTO;
 
-import com.sid.bankaccount.enums.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BankAccountResponse {
-    private String id;
-    private double balance;
-    private String currency;
-    private AccountType type;
-    private Long customerId;
+public class CustomerResponseDTO {
+    private Long id;
+    private String name;
+    private List<BankAccountResponse> bankAccounts;
 }

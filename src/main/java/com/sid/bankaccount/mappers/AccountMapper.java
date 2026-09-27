@@ -13,11 +13,14 @@ import java.util.List;
 public interface AccountMapper {
 
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "customer", ignore = true)
     BankAccount toEntity(String id, BankAccountRequestDTO bankAccountRequestDTO);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "customer", ignore = true)
     void updateEntity(BankAccountRequestDTO bankAccountRequestDTO, @MappingTarget BankAccount bankAccount);
 
+    @Mapping(target = "customerId", source = "customer.id")
     BankAccountResponse toResponse(BankAccount bankAccount);
 
     List<BankAccountResponse> toResponses(List<BankAccount> bankAccounts);

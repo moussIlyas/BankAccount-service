@@ -1,0 +1,46 @@
+type Query {
+    allAccounts: [BankAccountResponse!]!
+    accountById(id: ID!): BankAccountResponse!
+    allCustomers: [CustomerResponse!]!
+    customersByName(name: String!): [CustomerResponse!]!
+    customerById(id: ID!): CustomerResponse!
+}
+
+type Mutation {
+    createAccount(input: BankAccountRequest!): BankAccountResponse!
+    updateAccount(id: ID!, input: BankAccountRequest!): BankAccountResponse!
+    deleteAccount(id: ID!): Boolean!
+    createCustomer(input: CustomerRequest!): CustomerResponse!
+    updateCustomer(id: ID!, input: CustomerRequest!): CustomerResponse!
+    deleteCustomer(id: ID!): Boolean!
+}
+
+input BankAccountRequest {
+    balance: Float!
+    currency: String!
+    type: AccountType!
+    customerId: ID
+}
+
+type BankAccountResponse {
+    id: ID!
+    balance: Float!
+    currency: String!
+    type: AccountType!
+    customerId: ID
+}
+
+input CustomerRequest {
+    name: String!
+}
+
+type CustomerResponse {
+    id: ID!
+    name: String!
+    bankAccounts: [BankAccountResponse!]!
+}
+
+enum AccountType {
+    CURRENT
+    SAVING
+}
