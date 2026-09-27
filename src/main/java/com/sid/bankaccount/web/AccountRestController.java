@@ -1,7 +1,9 @@
 package com.sid.bankaccount.web;
 
-import com.sid.bankaccount.entities.BankAccount;
-import com.sid.bankaccount.repository.BankAccountRepository;
+import com.sid.bankaccount.DTO.BankAccountRequestDTO;
+import com.sid.bankaccount.DTO.BankAccountResponse;
+import com.sid.bankaccount.service.interfaces.AccountService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,53 +20,41 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/accounts")
+@RequiredArgsConstructor
 public class AccountRestController {
 
-    private final BankAccountRepository bankAccountRepository;
-
-    public AccountRestController(BankAccountRepository bankAccountRepository) {
-        this.bankAccountRepository = bankAccountRepository;
-    }
+    private final AccountService accountService;
 
     @GetMapping
-    public List<BankAccount> findAll() {
-        return bankAccountRepository.findAll();
+    public List<BankAccountResponse> findAll() {
+        return accountService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BankAccount> findById(@PathVariable String id) {
-        return bankAccountRepository.findById(id)
+    public ResponseEntity<BankAccountResponse> findById(@PathVariable String id) {
+        return accountService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<BankAccount> save(@RequestBody BankAccount bankAccount) {
-        boolean alreadyExists = bankAccountRepository.existsById(bankAccount.getId());
-        BankAccount saved = bankAccountRepository.save(bankAccount);
-        return alreadyExists
-                ? ResponseEntity.ok(saved)
-                : ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    public ResponseEntity<BankAccountResponse> create(@RequestBody BankAccountRequestDTO bankAccountRequestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(bankAccountRequestDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BankAccount> update(@PathVariable String id, @RequestBody BankAccount bankAccount) {
-        return bankAccountRepository.findById(id)
-                .map(existing -> {
-                    existing.setBalance(bankAccount.getBalance());
-                    existing.setCurrency(bankAccount.getCurrency());
-                    existing.setType(bankAccount.getType());
-                    return ResponseEntity.ok(bankAccountRepository.save(existing));
-                })
+    public ResponseEntity<BankAccountResponse> update(@PathVariable String id,
+                                                      @RequestBody BankAccountRequestDTO bankAccountRequestDTO) {
+        return accountService.updateAccount(id, bankAccountRequestDTO)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> delete(@PathVariable String id) {
-        if (!bankAccountRepository.existsById(id)) {
+        if (!accountService.deleteAccount(id)) {
             return ResponseEntity.notFound().build();
         }
-        bankAccountRepository.deleteById(id);
         return ResponseEntity.ok(Map.of("message", "Account deleted: " + id));
     }
 }
